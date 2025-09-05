@@ -158,7 +158,7 @@ MDNode *getAllocTokenHintMetadata(const CallBase &CB) {
     if (Ret->getNumOperands() == 0)
       return nullptr;
   } else {
-    Ret = CB.getMetadata("alloc_token_hint");
+    Ret = CB.getMetadata(LLVMContext::MD_alloc_token_hint);
     if (!Ret)
       return nullptr;
   }
