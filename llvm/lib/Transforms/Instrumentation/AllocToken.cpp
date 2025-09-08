@@ -151,7 +151,8 @@ STATISTIC(NumAllocations, "Allocations found");
 /// Expected format is: !{<type-name>, <contains-pointer>}
 MDNode *getAllocTokenHintMetadata(const CallBase &CB) {
   MDNode *Ret = nullptr;
-  if (auto *II = dyn_cast<IntrinsicInst>(&CB)) {
+  if (auto *II = dyn_cast<IntrinsicInst>(&CB);
+      II && II->getIntrinsicID() == Intrinsic::alloc_token_id) {
     auto *MDV = cast<MetadataAsValue>(II->getArgOperand(0));
     Ret = cast<MDNode>(MDV->getMetadata());
     // If the intrinsic has an empty MDNode, type inference failed.
@@ -358,7 +359,7 @@ bool AllocToken::instrumentFunction(Function &F) {
   // Collect all allocation calls to avoid iterator invalidation.
   for (Instruction &I : instructions(F)) {
     // Collect all alloc_token_* intrinsics.
-    if (IntrinsicInst *II = dyn_cast<IntrinsicInst>(&I);
+    if (auto *II = dyn_cast<IntrinsicInst>(&I);
         II && II->getIntrinsicID() == Intrinsic::alloc_token_id) {
       IntrinsicInsts.emplace_back(II);
       continue;
