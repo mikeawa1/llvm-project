@@ -1286,6 +1286,7 @@ llvm::MDNode *CodeGenFunction::EmitAllocTokenHint(QualType AllocType) {
   // Check if QualType contains a pointer. Implements a simple DFS to
   // recursively check if a type contains a pointer type.
   llvm::SmallPtrSet<const RecordDecl *, 4> VisitedRD;
+  bool IncompleteType = false;
   auto TypeContainsPtr = [&](auto &&self, QualType T) -> bool {
     QualType CanonicalType = T.getCanonicalType();
     if (CanonicalType->isPointerType())
@@ -1309,6 +1310,10 @@ llvm::MDNode *CodeGenFunction::EmitAllocTokenHint(QualType AllocType) {
       return self(self, AT->getElementType());
     // The type is a struct, class, or union.
     if (const RecordDecl *RD = CanonicalType->getAsRecordDecl()) {
+      if (!RD->isCompleteDefinition()) {
+        IncompleteType = true;
+        return false;
+      }
       if (!VisitedRD.insert(RD).second)
         return false; // already visited
       // Check all fields.
@@ -1330,6 +1335,8 @@ llvm::MDNode *CodeGenFunction::EmitAllocTokenHint(QualType AllocType) {
     return false;
   };
   const bool ContainsPtr = TypeContainsPtr(TypeContainsPtr, AllocType);
+  if (!ContainsPtr && IncompleteType)
+    return nullptr;
   auto *ContainsPtrC = Builder.getInt1(ContainsPtr);
   auto *ContainsPtrMD = MDB.createConstant(ContainsPtrC);
 
