@@ -2854,9 +2854,9 @@ def int_ptrauth_sign_generic :
 
 //===----------------- AllocToken Intrinsics ------------------------------===//
 
-// Return the token ID for the given !alloc_token_hint metadata.
+// Return the token ID for the given !alloc_token metadata.
 def int_alloc_token_id :
-  DefaultAttrsIntrinsic<[llvm_i64_ty], [llvm_metadata_ty],
+  DefaultAttrsIntrinsic<[llvm_anyint_ty], [llvm_metadata_ty],
                         [IntrNoMem, NoUndef<RetIndex>]>;
 
 //===----------------------------------------------------------------------===//
