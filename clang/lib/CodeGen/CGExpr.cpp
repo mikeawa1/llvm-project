@@ -1331,8 +1331,10 @@ llvm::MDNode *CodeGenFunction::buildAllocToken(QualType AllocType) {
   PrintingPolicy Policy(CGM.getContext().getLangOpts());
   Policy.SuppressTagKeyword = true;
   Policy.FullyQualifiedName = true;
-  std::string TypeName = AllocType.getCanonicalType().getAsString(Policy);
-  auto *TypeNameMD = MDB.createString(TypeName);
+  SmallString<64> TypeName;
+  llvm::raw_svector_ostream TypeNameOS(TypeName);
+  AllocType.getCanonicalType().print(TypeNameOS, Policy);
+  auto *TypeNameMD = MDB.createString(TypeNameOS.str());
 
   // Check if QualType contains a pointer. Implements a simple DFS to
   // recursively check if a type contains a pointer type.

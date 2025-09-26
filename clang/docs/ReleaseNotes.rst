@@ -203,10 +203,11 @@ Non-comprehensive list of changes in this release
   Currently, the use of ``__builtin_dedup_pack`` is limited to template arguments and base
   specifiers, it also must be used within a template context.
 
-- Introduce support for allocation tokens to enable allocator-level heap
-  organization strategies. A feature to instrument all allocation functions
-  with a token ID can be enabled via the ``-fsanitize=alloc-token`` flag. A
-  builtin ``__builtin_infer_alloc_token(<args>, ...)`` is provided to allow
+- Introduce support for :doc:`allocation tokens <AllocToken>` to enable
+  allocator-level heap organization strategies. A feature to instrument all
+  allocation functions with a token ID can be enabled via the
+  ``-fsanitize=alloc-token`` flag.
+- A builtin ``__builtin_infer_alloc_token(<args>, ...)`` is provided to allow
   compile-time querying of allocation token IDs, where the builtin arguments
   mirror those normally passed to an allocation function.
 
