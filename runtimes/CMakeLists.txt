@@ -52,7 +52,7 @@ foreach(proj ${LLVM_ENABLE_RUNTIMES})
     message(FATAL_ERROR "LLVM_ENABLE_RUNTIMES requests ${proj} but directory not found: ${proj_dir}")
   endif()
   string(TOUPPER "${proj}" canon_name)
-  STRING(REGEX REPLACE "-" "_" canon_name ${canon_name})
+  string(REGEX REPLACE "-" "_" canon_name ${canon_name})
   set(LLVM_EXTERNAL_${canon_name}_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../${proj}")
 endforeach()
 
