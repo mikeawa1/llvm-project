@@ -28,3 +28,11 @@ add_header_library(
     .abort_handler_s
     libc.hdr.types.constraint_handler_t
 )
+
+add_header_library(
+  set_constraint_handler_s
+  HDRS
+    set_constraint_handler_s.h
+  DEPENDS
+    
+)
